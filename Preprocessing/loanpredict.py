@@ -37,7 +37,7 @@ X_test_minmax = MinMaxScaler().fit_transform(X_test[['ApplicantIncome', 'Coappli
 # Look at the scaled data
 print("Scaled Head:")
 print(X_train.head())
-print("Mean: \n".format(X_train_minmax.scale_(axis = 0)))
+# print("Mean: \n".format(X_train_minmax.scale_(axis = 0)))
 
 
 # -----------Label Encoding-------
