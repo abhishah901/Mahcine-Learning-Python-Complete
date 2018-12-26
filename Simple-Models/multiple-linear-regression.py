@@ -2,39 +2,35 @@
 # ----library imports-----
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn import metrics
 
 # ---- import a simple dataset with 2 numeric columns ----------
-data = pd.read_csv('data/student_scores.csv')
+data = pd.read_csv('data/Economy.csv')
 
 # --- look at the data ----
 print(data.shape)
 print(data.head())
 print(data.describe())
 
-# ---- Simple plot ------
-data.plot(x='Hours', y='Scores', style='o')
-plt.title('Hours vs Scores')
-plt.xlabel('Hours Studied')
-plt.ylabel('Percentage Scored')
-plt.show(block=False)
+# ----- Prepare data for split, train and fitting purposes -----
+X = data.iloc[:,:4]
+y = data.iloc[:,-1]
 
-X_train, X_test, y_train, y_test = train_test_split(data.iloc[:, :-1].values, data.iloc[:, 1].values,
-                                                    test_size=0.2,
-                                                    random_state=0)
+# ----- Split > 80:20 -----------
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
-Lreg = LinearRegression()
-Lreg.fit(X_train, y_train)
+# ------ Fit ---------
+Mreg = LinearRegression()
+Mreg.fit(X_train, y_train)
 
-# ---- Some interesting Model Attributes -----
-print('Regression Intercept:', Lreg.intercept_)
-print('Regression Coefficient:', Lreg.coef_)
+# ----- Coefficients ------
+coeffs = pd.DataFrame(Mreg.coef_, X.columns, columns=['Coefficient'])
+print(coeffs)
 
-# ------ Apply model -------
-y_pred = Lreg.predict(X_test)
+# ----- Predict --------
+y_pred = Mreg.predict(X_test)
 
 # ----- Checking Actual vs Predicted -----
 holder = pd.DataFrame({'Real': y_test, 'Predictions': y_pred})
