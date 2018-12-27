@@ -15,7 +15,10 @@ print(data.head())
 print(data.describe())
 
 # ----- Prepare data for split, train and fitting purposes -----
-X = data.iloc[:,:4]
+temp = (len(data.columns) - 1)
+# print(temp)
+# print(type(temp))
+X = data.iloc[:,:temp]
 y = data.iloc[:,-1]
 
 # ----- Split > 80:20 -----------

@@ -11,16 +11,10 @@ from sklearn import metrics
 data = pd.read_csv('data/student_scores.csv')
 
 # --- look at the data ----
-print(data.shape)
-print(data.head())
-print(data.describe())
+# print(data.shape)
+# print(data.head())
+# print(data.describe())
 
-# ---- Simple plot ------
-data.plot(x='Hours', y='Scores', style='o')
-plt.title('Hours vs Scores')
-plt.xlabel('Hours Studied')
-plt.ylabel('Percentage Scored')
-plt.show(block=False)
 
 X_train, X_test, y_train, y_test = train_test_split(data.iloc[:, :-1].values, data.iloc[:, 1].values,
                                                     test_size=0.2,
@@ -30,11 +24,28 @@ Lreg = LinearRegression()
 Lreg.fit(X_train, y_train)
 
 # ---- Some interesting Model Attributes -----
-print('Regression Intercept:', Lreg.intercept_)
-print('Regression Coefficient:', Lreg.coef_)
+b = Lreg.intercept_
+m = Lreg.coef_[0]
+print('Regression Intercept:', b)
+print('Regression Coefficient:', m)
 
 # ------ Apply model -------
 y_pred = Lreg.predict(X_test)
+
+# ---- Prepare regression line for plot-----
+# print(minX,maxX)
+minX = X_train[:,0].min()
+maxX = X_train[:,0].max()
+# ---- Plot ------
+data.plot(x='Hours', y='Scores', style='o')
+# plt.plot(data['Scores'], y_pred)
+plt.plot([minX,maxX],[b, m*maxX + b], 'r')
+plt.title('Hours vs Scores')
+plt.xlabel('Hours Studied')
+plt.ylabel('Percentage Scored')
+plt.show(block=False)
+
+# plt.savefig('Linear-Regression.png')
 
 # ----- Checking Actual vs Predicted -----
 holder = pd.DataFrame({'Real': y_test, 'Predictions': y_pred})
