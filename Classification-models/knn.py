@@ -1,7 +1,16 @@
+# ---- Imports -----
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.neighbors import KNeighborsClassifier
+import matplotlib.cm as cm
+from matplotlib.colors import ListedColormap, BoundaryNorm
+import matplotlib.patches as mpatches
+import matplotlib.patches as mpatches
 
+# ---- get data -----
 fruits = pd.read_table('data/fruit_data_with_colors.txt')
 
 print(fruits.head())
@@ -11,22 +20,19 @@ print(fruits.describe())
 
 fruits.drop('fruit_label', axis=1).plot(kind='box', subplots=True, layout=(2,2), sharex=False, sharey=False, figsize=(9,9), title='Box Plot for each input variable')
 
-plt.savefig('fruits_box')
-plt.show(block=False)
+# plt.savefig('plots/fruits_box')
+# plt.show()
 
-from sklearn.model_selection import train_test_split
 
 feature_names = ['mass', 'width', 'height', 'color_score']
 X = fruits[feature_names]
 y = fruits['fruit_label']
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
-from sklearn.preprocessing import MinMaxScaler
 scaler = MinMaxScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-from sklearn.neighbors import KNeighborsClassifier
 
 knn = KNeighborsClassifier()
 knn.fit(X_train, y_train)
@@ -35,10 +41,6 @@ print('Accuracy of K-NN classifier on training set: {:.2f}'
 print('Accuracy of K-NN classifier on test set: {:.2f}'
      .format(knn.score(X_test, y_test)))
 
-import matplotlib.cm as cm
-from matplotlib.colors import ListedColormap, BoundaryNorm
-import matplotlib.patches as mpatches
-import matplotlib.patches as mpatches
 
 X = fruits[['mass', 'width', 'height', 'color_score']]
 y = fruits['fruit_label']
@@ -88,7 +90,7 @@ def plot_fruit_knn(X, y, n_neighbors, weights):
     plt.ylabel('width (cm)')
     plt.title("4-Class classification (k = %i, weights = '%s')"
                % (n_neighbors, weights))
-    plt.show()
+    # plt.savefig('plots/knn')
 
 
 plot_fruit_knn(X_train, y_train, 5, 'uniform')
@@ -108,4 +110,4 @@ plt.xlabel('k')
 plt.ylabel('accuracy')
 plt.scatter(k_range, scores)
 plt.xticks([0,5,10,15,20])
-plt.show(block=False)
+# plt.savefig('plots/knn-accuracy')

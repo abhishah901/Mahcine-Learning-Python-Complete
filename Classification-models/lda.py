@@ -1,45 +1,43 @@
-# LDA
-
-# Importing the libraries
+# ------- Imports --------
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
+from matplotlib.colors import ListedColormap
 
-# Importing the dataset
+# ----- Get Data ------
 dataset = pd.read_csv('data/Wine.csv')
 X = dataset.iloc[:, 0:13].values
 y = dataset.iloc[:, 13].values
 
-# Splitting the dataset into the Training set and Test set
-from sklearn.model_selection import train_test_split
+# ------ Basic Split --------
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
 
-# Feature Scaling
-from sklearn.preprocessing import StandardScaler
+# ------ Feature Scaling ------
 sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
 
-# Applying LDA
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
+# ------- Apply --------
 lda = LDA(n_components = 2)
 X_train = lda.fit_transform(X_train, y_train)
 X_test = lda.transform(X_test)
 
-# Fitting Logistic Regression to the Training set
-from sklearn.linear_model import LogisticRegression
+# --- Fitting Logistic Regression ---
 classifier = LogisticRegression(random_state = 0)
 classifier.fit(X_train, y_train)
 
-# Predicting the Test set results
+# ---- Predict ----
 y_pred = classifier.predict(X_test)
 
-# Making the Confusion Matrix
-from sklearn.metrics import confusion_matrix
+# ---- Confusion Matrix -----
 cm = confusion_matrix(y_test, y_pred)
 
-# Visualising the Training set results
-from matplotlib.colors import ListedColormap
+# ---- Visualising Results ------
 X_set, y_set = X_train, y_train
 X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
                      np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
@@ -54,10 +52,9 @@ plt.title('LDA (Training set)')
 plt.xlabel('LD1')
 plt.ylabel('LD2')
 plt.legend()
-plt.show()
+# plt.savefig('plots/LDA-train')
 
-# Visualising the Test set results
-from matplotlib.colors import ListedColormap
+# ----- Visualising Results -----
 X_set, y_set = X_test, y_test
 X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
                      np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
@@ -72,4 +69,4 @@ plt.title('LDA (Test set)')
 plt.xlabel('LD1')
 plt.ylabel('LD2')
 plt.legend()
-plt.show()
+# plt.savefig('plots/LDA-test')
