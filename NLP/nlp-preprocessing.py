@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 
 
-def create_df(corpus):
+def create_dfs(corpus):
     print("Gathering data..")
     hold_files = corpus.fileids()
     rowlist = []
@@ -20,12 +20,20 @@ def create_df(corpus):
         each_row['Year'], each_row['Last_name'], _ = each.replace('-', '.').split('.')
         each_row['Text'] = pre_process(corpus.raw(each))  # Preprocessed text file
         rowlist.append(each_row)
-        # print(each_row)
-        # break
     print("Creating dataframe..")
     df = pd.DataFrame(rowlist)
     df['Year'] = df['Year'].astype(int)
-    return df
+    tf_idf_df = get_tfidf(df)
+    return tf_idf_df, df
+
+
+def get_tfidf(df):
+    vectorizer = TfidfVectorizer(min_df=1)
+    files_corpora = list(df['Text'])
+    tfidf = vectorizer.fit_transform(files_corpora)
+    return tfidf
+
+
 
 def pre_process(text):
     # Remove punctuations
@@ -41,9 +49,6 @@ def pre_process(text):
 
 
 
-df = create_df(inaugural)
-
-
-
-
-########## Year, Last name, Text
+tfidf, df = create_dfs(inaugural)
+print(type(tfidf))
+print(df.head())
