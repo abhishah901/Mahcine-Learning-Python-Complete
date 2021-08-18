@@ -24,13 +24,15 @@ def create_dfs(corpus):
     df = pd.DataFrame(rowlist)
     df['Year'] = df['Year'].astype(int)
     tf_idf_df = get_tfidf(df)
+
     return tf_idf_df, df
 
 
 def get_tfidf(df):
     vectorizer = TfidfVectorizer(min_df=1)
     files_corpora = list(df['Text'])
-    tfidf = vectorizer.fit_transform(files_corpora)
+    tfidf = vectorizer.fit_transform(files_corpora)  # Returns scipy.sparse.csr.csr_matrix
+    tfidf = pd.DataFrame(tfidf.toarray())
     return tfidf
 
 
